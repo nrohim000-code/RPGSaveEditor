@@ -1,8 +1,13 @@
 import { useCallback } from 'react';
 import { ContentType, useContent } from '../context/ContentContext';
 import { readFile, selectFile, writeFile } from '../utils/fileUtils';
+import { exists, readTextFile } from '@tauri-apps/plugin-fs';
 import { decodeRpgsave, encodeRpgsave } from '../utils/rpgsaveUtils';
 import { toast } from 'react-toastify';
+import { rpgSaveToSaveData } from '../utils/saveDataUtils';
+import { RPGSave } from '../types/RPGSave';
+import { dirname, join } from '@tauri-apps/api/path';
+
 
 export const useFileUpload = () => {
   const { content, setContent } = useContent();
@@ -10,50 +15,72 @@ export const useFileUpload = () => {
   const handleReadFile = useCallback(async (filePath: string) => {
     try {
       const fileContent = await readFile(filePath);
-      const decodedContent = decodeRpgsave(fileContent);
-      const gameName = getNameOfGame(filePath)
+      if (!filePath.endsWith('.rpgsave')) {
+        return errorNotify('Invalid file type! Please upload a .rpgsave file.');
+      }
+
+      const decodedContent: RPGSave = decodeRpgsave(fileContent);
+      const decodedContent2: RPGSave = decodeRpgsave(fileContent);
+      const gameName = getNameOfGame(filePath);
 
       const contentData: ContentType = {
         ...content,
-
-        oldSaveData: gameName != content?.gameName ? {} : (content?.originSaveData || {}),
-        saveData: JSON.parse(decodedContent),
-        originSaveData: JSON.parse(decodedContent),
+        oldSaveData: gameName !== content?.gameName ? undefined : content?.originSaveData,
+        saveData: rpgSaveToSaveData(decodedContent),
+        originSaveData: rpgSaveToSaveData(decodedContent2),
         fileName: filePath.split('\\').pop() || '',
+        filePath,
+        gameName,
+        itemData: await loadJsonData(filePath, 'Items'),
+        systemData: await loadJsonData(filePath, 'System'),
+        weaponsData: await loadJsonData(filePath, 'Weapons'),
+        armorsData: await loadJsonData(filePath, 'Armors'),
       };
 
-      // Get Items Data
-      const itemFilePath = getFileFilePath(filePath, 'Items');
-      contentData.itemData = JSON.parse(await readFile(itemFilePath));
-
-      // Get System Data
-      const sysFilePath = getFileFilePath(filePath, 'System');
-      contentData.systemData = JSON.parse(await readFile(sysFilePath));
-
-      // Get Weapons Data
-      const weaponsFilePath = getFileFilePath(filePath, 'Weapons');
-      contentData.weaponsData = JSON.parse(await readFile(weaponsFilePath));
-
-      // Get Armors Data
-      const armorsFilePath = getFileFilePath(filePath, 'Armors');
-      contentData.armorsData = JSON.parse(await readFile(armorsFilePath));
-
-
-      contentData.filePath = filePath
-      contentData.gameName = gameName
       setContent(contentData);
     } catch (error) {
-      errorNotify('Error processing file! \n' + error)
-
+      errorNotify(`Error processing file! \n${error}`);
     }
   }, [content, setContent]);
+
+ const loadJsonData = async (filePath: string, fileName: string) => {
+   let path;
+   // Check if file exists
+   try {
+      path = await getJsonFilePath(filePath, fileName);
+      const fileExists = await exists(path);
+      if (!fileExists) {
+        warningNotify(`Missing JSON file: ${path}`);
+        return null;
+      }
+    } catch (e) {
+      console.error('Failed to check file existence for', path, e);
+      return null;
+    }
+
+    try {
+      let fileContent = await readTextFile(path);
+      
+      // Remove BOM if present
+      fileContent = fileContent.replace(/^\uFEFF/, '');
+      
+      // Remove control characters (except newline, tab, carriage return)
+      fileContent = fileContent.replace(/[\u0000-\u0008\u000B-\u000C\u000E-\u001F\u007F]/g, '');
+      
+      return JSON.parse(fileContent);
+
+    } catch (error) {
+      console.error('Failed to parse JSON from', fileName);
+      warningNotify(`Failed to load JSON data from ${fileName}: ${error}`);
+      return null;
+    }
+  };
 
   const uploadFile = useCallback(async () => {
     const filePath = await selectFile();
     if (filePath) {
       await handleReadFile(filePath);
     }
-    console.log('Upload file triggered');
   }, [handleReadFile]);
 
   return uploadFile;
@@ -64,25 +91,20 @@ export const useReload = () => {
 
   const handleReadFile = useCallback(async (filePath: string) => {
     try {
-
       const fileContent = await readFile(filePath);
-      const decodedContent = decodeRpgsave(fileContent);
-      // console.log(JSON.stringify(content));
-
-
-      setContent((prev: any) => {
-        console.log(JSON.stringify(prev.filePath));
-
-        const contentData: ContentType = { ...prev }
-
-        contentData.oldSaveData = contentData?.originSaveData || {}
-        contentData.saveData = JSON.parse(decodedContent);
-        contentData.originSaveData = JSON.parse(decodedContent);
-        return contentData
-      });
-      successNotify('File Reloaded!')
+      if (filePath.endsWith('.rpgsave')) {
+        const decodedContent: RPGSave = decodeRpgsave(fileContent);
+        const decodedContent2: RPGSave = decodeRpgsave(fileContent);
+        setContent((prev: any) => ({
+          ...prev,
+          oldSaveData: prev?.originSaveData || undefined,
+          saveData: rpgSaveToSaveData(decodedContent),
+          originSaveData: rpgSaveToSaveData(decodedContent2),
+        }));
+      }
+      successNotify('File Reloaded!');
     } catch (error) {
-      errorNotify('Error Reloading File Save! \n' + error)
+      errorNotify(`Error Reloading File Save! \n${error}`);
     }
   }, [setContent]);
 
@@ -119,21 +141,20 @@ export const useSave = () => {
 };
 
 
-function getFileFilePath(originalPath: string, fileName: string): string {
-  // Tách phần đường dẫn và tên file
-  const pathParts = originalPath.split('\\');
-  const fileNameWithExt = pathParts.pop(); // 'file1.rpgsave'
-  pathParts.pop();
-  const folderPath = pathParts.join('\\'); // 'D:\Gamess\AmongUs\Winter Memories (Kagura v1.08)\www'
-
-  if (fileNameWithExt) {
-    const newFilePath = `${folderPath}\\data\\${fileName}.json`; // Đường dẫn mới
-
-    return newFilePath;
+const getJsonFilePath = async (originalPath: string, fileName: string): Promise<string> => {
+  try {
+    // Get the parent directory of the .rpgsave file (e.g. 'D:\Gamess\AmongUs\Winter Memories (Kagura v1.08)\www')
+    const saveDir = await dirname(originalPath);
+    const wwwDir = await dirname(saveDir);
+    // Join: wwwDir + '/data' + fileName.json (cross-platform)
+    const jsonPath = await join(wwwDir, 'data', `${fileName}.json`);
+    
+    return jsonPath;
+  } catch (error) {
+    warningNotify(`Could not get JSON path: ${fileName}.json`);
+    throw error; // rethrow the error
   }
-
-  throw new Error('Invalid file path');
-}
+};
 function getNameOfGame(originalPath: string): string {
   const pathParts = originalPath.split('\\');
   pathParts.pop() // 'file1.rpgsave'
@@ -145,8 +166,8 @@ function getNameOfGame(originalPath: string): string {
   if (gameName) {
     return gameName;
   }
-
-  throw new Error('Invalid file path');
+  warningNotify('Could not determine game name from file path.');
+  return 'Unknown Game';
 }
 const successNotify = (text: string) => {
   toast.success(text, {
@@ -160,6 +181,17 @@ const successNotify = (text: string) => {
 };
 const errorNotify = (text: string) => {
   toast.error(text, {
+    position: "bottom-right",
+    autoClose: 4000,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+  });
+};
+
+const warningNotify = (text: string) => {
+  toast.warn(text, {
     position: "bottom-right",
     autoClose: 4000,
     hideProgressBar: true,
