@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(npm install:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run tauri:*)",
+      "Bash(node test-rvdata2.js:*)",
+      "Bash(dir:*)",
+      "Bash(node test-rvdata2-deep.js:*)",
+      "Bash(node test-items-rvdata2.js:*)",
+      "Bash(node analyze-save.js:*)",
+      "Bash(node raw-decode.js:*)",
+      "Bash(node find-nested-data.js:*)",
+      "Bash(node check-raw-bytes.js:*)",
+      "Bash(node decode-second-section.js:*)",
+      "Bash(node decode-limited.js:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill:*)",
+      "Bash(node -e \"const fs = require(''fs''); const { load } = require(''@hyrious/marshal''); const buffer = fs.readFileSync(''D:\\\\Games\\\\AmongUs\\\\LonaRPG_B010310\\\\LonaRPG\\\\UserData\\\\Save01.rvdata2''); const uint8 = new Uint8Array(buffer); let offset = 0; for (let i = 0; i < uint8.length - 1; i++) { if (uint8[i] === 0x04 && uint8[i + 1] === 0x08) { if (offset === 0) offset = i; else { console.log(''Second Marshal section at:'', i); const data = load(uint8.slice(i)); if (data && typeof data === ''object'') { const symbols = Object.getOwnPropertySymbols(data); const actors = symbols.find(s => s.description === ''@actors''); if (actors && data[actors]) { const actorSymbols = Object.getOwnPropertySymbols(data[actors]); const actorData = actorSymbols.find(s => s.description === ''@data''); if (actorData && data[actors][actorData] && data[actors][actorData][1]) { const firstActor = data[actors][actorData][1]; const actorProps = Object.getOwnPropertySymbols(firstActor); console.log(''First actor properties:''); actorProps.forEach(p => console.log(''  -'', p.description)); } } } break; } } }\")",
+      "Bash(node analyze-actor-props.js:*)",
+      "Bash(node analyze-actor-props.cjs:*)",
+      "Bash(node test-save-load.cjs:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

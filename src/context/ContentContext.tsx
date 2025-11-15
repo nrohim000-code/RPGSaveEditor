@@ -17,6 +17,7 @@ export interface ContentType {
   filePath?: string;
   fileName?: string;
   gameName?: string;
+  fileType?: 'rpgsave' | 'rvdata2'; // Track whether file is RPG Maker MV/MZ or VX Ace
 }
 
 interface ContentContextType {

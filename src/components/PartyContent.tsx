@@ -81,7 +81,8 @@ const PartyContent: React.FC = () => {
     ))
   );
 
-  const characters = content.saveData?.actors?._data?.['@a'].filter((e: any) => e != null) || [];
+  const actorsData = content.saveData?.actors?._data;
+  const characters = (actorsData?.['@a'] || actorsData || [])?.filter((e: any) => e != null) || [];
 
   return (
     <Container>
@@ -103,7 +104,7 @@ const PartyContent: React.FC = () => {
           {expandedCharacter === index && (
             <>
               <BonusList>
-                {renderBonus(character._paramPlus['@a'] || [], index)}
+                {renderBonus(character._paramPlus?.['@a'] || character._paramPlus || [], index)}
               </BonusList>
               <StatsContainer>
                 <StatItem>
@@ -142,7 +143,7 @@ const PartyContent: React.FC = () => {
                     onChange={(e) => handleStatChange(index, '_level', Number(e.target.value))}
                   />
                 </StatItem>) : null}
-                {character._exp["1"] ? (<StatItem>
+                {character._exp?.["1"] ? (<StatItem>
                   <StatLabel htmlFor={`exp-${index}`}>Exp:</StatLabel>
                   <BonusInput
                     id={`exp-${index}`}

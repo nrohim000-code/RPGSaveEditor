@@ -44,9 +44,9 @@ const VariablesContent: React.FC = () => {
     }
   }, [inView]);
 
-  const itemsOfPlayerOrigin = content.originSaveData?.variables?._data['@a'] || [];
-  const itemsOfPlayer = content.saveData?.variables?._data['@a'] || [];
-  const itemsOfPlayerOld = content.oldSaveData?.variables?._data['@a'] || [];
+  const itemsOfPlayerOrigin = content.originSaveData?.variables?._data?.['@a'] || content.originSaveData?.variables?._data || [];
+  const itemsOfPlayer = content.saveData?.variables?._data?.['@a'] || content.saveData?.variables?._data || [];
+  const itemsOfPlayerOld = content.oldSaveData?.variables?._data?.['@a'] || content.oldSaveData?.variables?._data || [];
 
   const handleQuantityChange = useCallback((id: number, value: number | string) => {
     const normalizedValue = typeof value === 'string' && !isNaN(Number(value))

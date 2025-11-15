@@ -44,9 +44,9 @@ const SwitchesContent: React.FC = () => {
 
   
   const switches = content.systemData?.switches || []; // Chuỗi các switch
-  const switchesState = content.saveData?.switches?._data['@a'] || []; // Trạng thái của các switch
-  const switchesStateOrigin = content.originSaveData?.switches?._data['@a'] || []; // Trạng thái của các switch
-  const oldSwitchesState = content.oldSaveData?.switches?._data['@a'] || []; // Trạng thái cũ của các switch
+  const switchesState = content.saveData?.switches?._data?.['@a'] || content.saveData?.switches?._data || []; // Trạng thái của các switch
+  const switchesStateOrigin = content.originSaveData?.switches?._data?.['@a'] || content.originSaveData?.switches?._data || []; // Trạng thái của các switch
+  const oldSwitchesState = content.oldSaveData?.switches?._data?.['@a'] || content.oldSaveData?.switches?._data || []; // Trạng thái cũ của các switch
 
   // Tạo mảng Switch với id, name, state, oldState, và gap
   const switchData: (Switch)[] = (switches && switches.length > 0
