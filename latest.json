@@ -1,11 +1,19 @@
 {
-  "version": "1.1.0",
-  "notes": "Fix some JSON that cannot parse correctly. \n Still can load save file when some JSON file is missing like: Items, Armor, System, Weapons. \n Add update feature.",
-  "pub_date": "2025-10-25T13:00:00Z",
+  "version": "1.2.0",
+  "notes": "## What's Changed
+
+- update latest.json (@truongthang2211)
+- Update Readme (@truongthang2211)
+- Handle both @ and non-@ variable data jsons (#9) (@IKnewOne)
+- Add workflow (@truongthang2211)
+- Bump version to 1.2.0 (@truongthang2211)
+
+**Full Changelog**: https://github.com/truongthang2211/RPGSaveEditor/compare/v1.1.0...v1.2.0",
+  "pub_date": "2025-12-13T13:36:21Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTN1gxbDc5b040QVowajFtRXhTRzIzMWR5YnVkcDBjM1B4MThwUHoxQzdvZWsxWGkzeXVrRVFPOEV2UjQ3ZXdEc0E0UVZmdm5hdEdnOHpFZ0VIZGR2dmZ1Y1RHRlFiVVFzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzYxMzc1NTMzCWZpbGU6cnBnc2F2ZWVkaXRvcl8xLjEuMF94NjQtc2V0dXAuZXhlCkt6cnJWSkl3MHl6SEM4UGp3eUM5YmlPbHlBR2RoNWpKZWQzekxTSm55ZGd0Sy9oaTVLQSs5dUFjdjJjbkVuRHlFeVFHYUZIK2JIMUkwSk5yOWp3TUFnPT0K",
-      "url": "https://github.com/truongthang2211/RPGSaveEditor/releases/download/v1.1.0/rpgsaveeditor_1.1.0_x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTN1gxbDc5b040QWZuRWNZcmVaOVVVSlAvZ2ZlQmIzMC9PUVNwZGNyQjN3Z2VRT2JXL1I5a0lzUkw1ZmtidFBlWVRBdEUvTkhJbkxnejJVSURWV3dQMWVta3lBNVpNeXcwPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzY1NjMyOTgwCWZpbGU6cnBnc2F2ZWVkaXRvcl8xLjIuMF94NjQtc2V0dXAuZXhlCjRhK3g3ZTU0OHRoVCszdXNOV2prN3VzWkdtd3loNlVaaWhsTTZJNXpvcnBaNVB0eVpKVUpHelBEbHBNcUx1Z0EwVi93bkZFODFyNEJVOUZOR2RQRUJBPT0K",
+      "url": "https://github.com/truongthang2211/RPGSaveEditor/releases/download/v1.2.0/rpgsaveeditor_1.2.0_x64-setup.exe"
     }
   }
 }
