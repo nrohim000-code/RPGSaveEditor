@@ -153,20 +153,30 @@ jobs:
             core.setOutput('signature', signature);
 
       - name: Update latest.json
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+          NOTES: ${{ steps.release.outputs.notes }}
+          PUB_DATE: ${{ steps.release.outputs.pub_date }}
+          SIGNATURE: ${{ steps.release.outputs.signature }}
+          URL: ${{ steps.release.outputs.url }}
         run: |
-          cat > latest.json << 'EOF'
-          {
-            "version": "${{ steps.release.outputs.version }}",
-            "notes": "${{ steps.release.outputs.notes }}",
-            "pub_date": "${{ steps.release.outputs.pub_date }}",
-            "platforms": {
-              "windows-x86_64": {
-                "signature": "${{ steps.release.outputs.signature }}",
-                "url": "${{ steps.release.outputs.url }}"
+          jq -n \
+            --arg version "$VERSION" \
+            --arg notes "$NOTES" \
+            --arg pub_date "$PUB_DATE" \
+            --arg signature "$SIGNATURE" \
+            --arg url "$URL" \
+            '{
+              version: $version,
+              notes: $notes,
+              pub_date: $pub_date,
+              platforms: {
+                "windows-x86_64": {
+                  signature: $signature,
+                  url: $url
+                }
               }
-            }
-          }
-          EOF
+            }' > latest.json
 
       - name: Commit and push latest.json
         run: |
