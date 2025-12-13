@@ -97,9 +97,14 @@ const About: React.FC = () => {
       setUpdateStatus('checking');
       setUpdateError(null);
       setDownloadProgress(null);
-      
+
+      console.log('Checking for updates...');
+      console.log('Current version:', version);
+
       const update = await check();
-      
+
+      console.log('Update check result:', update);
+
       if (update) {
         setUpdateStatus('available');
         const confirmed = await window.confirm(
@@ -141,7 +146,22 @@ const About: React.FC = () => {
       }
     } catch (error) {
       console.error('Update error:', error);
-      setUpdateError(error instanceof Error ? error.message : 'Failed to check for updates');
+      console.error('Error details:', JSON.stringify(error, null, 2));
+
+      // Extract more detailed error message
+      let errorMessage = 'Failed to check for updates';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+        if (error.stack) {
+          console.error('Stack trace:', error.stack);
+        }
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      } else {
+        errorMessage = JSON.stringify(error);
+      }
+
+      setUpdateError(errorMessage);
       setUpdateStatus(null);
       setDownloadProgress(null);
     }
