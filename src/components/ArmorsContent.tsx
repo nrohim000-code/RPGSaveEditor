@@ -138,7 +138,7 @@ const ArmorsContent: React.FC = () => {
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <span onClick={() => handleSort('name')} style={{ cursor: 'pointer' }}>Name</span>
                 <span onClick={() => {
-                  toast.promise(translateMultiple(filteredArmors.map(i => i.name)), {
+                  toast.promise(translateMultiple(items.map((i: any) => i.name)), {
                     pending: 'Translating...',
                     success: 'Translated!',
                     error: 'Failed to translate'
