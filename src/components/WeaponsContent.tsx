@@ -15,6 +15,8 @@ import Tooltip from './Tooltip';
 import { useInView } from 'react-intersection-observer';
 import { WeaponData } from '../types/Weapon';
 import TranslateText from './TranslateText';
+import { useTranslation } from '../context/TranslationContext';
+import { toast } from 'react-toastify';
 interface Item {
   id: string | number;
   name: string;
@@ -26,6 +28,7 @@ interface Item {
 
 const WeaponsContent: React.FC = () => {
   const { content, setContent } = useContent();
+  const { translateMultiple } = useTranslation();
   const [searchId, setSearchId] = useState<string>('');
   const [searchName, setSearchName] = useState<string>('');
   const [searchQuantity, setSearchQuantity] = useState<string>('');
@@ -130,11 +133,16 @@ const WeaponsContent: React.FC = () => {
               />
             </TableHeaderCell>
             <TableHeaderCell width='30%' className="name-column">
-              <span
-                onClick={() => handleSort('name')} style={{ cursor: 'pointer' }}
-              >
-                Name
-              </span>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span onClick={() => handleSort('name')} style={{ cursor: 'pointer' }}>Name</span>
+                <span onClick={() => {
+                  toast.promise(translateMultiple(filteredWeapons.map(i => i.name)), {
+                    pending: 'Translating...',
+                    success: 'Translated!',
+                    error: 'Failed to translate'
+                  });
+                }} style={{ cursor: 'pointer', fontSize: '12px', background: '#333', padding: '2px 6px', borderRadius: '4px' }}>🌐 Translate All</span>
+              </div>
               <SearchInput
                 type="text"
                 placeholder="Search"

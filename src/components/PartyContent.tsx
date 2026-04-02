@@ -17,9 +17,12 @@ import {
   BonusLabel
 } from '../styles/PartyContentStyles';
 import TranslateText from './TranslateText';
+import { useTranslation } from '../context/TranslationContext';
+import { toast } from 'react-toastify';
 
 const PartyContent: React.FC = () => {
   const { content, setContent } = useContent();
+  const { translateMultiple } = useTranslation();
   const [gold, setGold] = useState<number>(content.saveData?.party?._gold ?? 0);
   const [expandedCharacter, setExpandedCharacter] = useState<number | null>(null);
 
@@ -86,15 +89,26 @@ const PartyContent: React.FC = () => {
 
   return (
     <Container>
-      <GoldContainer>
-        <Label htmlFor="gold">Gold</Label>
-        <Input
-          id="gold"
-          type="number"
-          value={gold}
-          onChange={handleGoldChange}
-        />
-      </GoldContainer>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+        <GoldContainer style={{ margin: 0 }}>
+          <Label htmlFor="gold">Gold</Label>
+          <Input
+            id="gold"
+            type="number"
+            value={gold}
+            onChange={handleGoldChange}
+          />
+        </GoldContainer>
+        <button onClick={() => {
+            toast.promise(translateMultiple(characters.map((c: any) => c._name || '')), {
+              pending: 'Translating All...',
+              success: 'Translated!',
+              error: 'Failed to translate'
+            });
+          }} style={{ cursor: 'pointer', padding: '6px 12px', background: '#333', color: 'white', borderRadius: '4px', border: 'none' }}>
+            🌐 Translate All Characters
+        </button>
+      </div>
       {characters.map((character: any, index: number) => (
         <CharacterContainer key={index}>
           <CharacterHeader onClick={() => handleCharacterClick(index)}>

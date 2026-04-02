@@ -13,6 +13,8 @@ import {
 } from '../styles/ItemsContentStyles';
 import { useInView } from 'react-intersection-observer';
 import TranslateText from './TranslateText';
+import { useTranslation } from '../context/TranslationContext';
+import { toast } from 'react-toastify';
 
 interface Switch {
   id: number;
@@ -24,6 +26,7 @@ interface Switch {
 
 const SwitchesContent: React.FC = () => {
   const { content, setContent } = useContent();
+  const { translateMultiple } = useTranslation();
   const [searchId, setSearchId] = useState<string>('');
   const [searchName, setSearchName] = useState<string>('');
   const [searchState, setSearchState] = useState<string>('');
@@ -126,7 +129,16 @@ const SwitchesContent: React.FC = () => {
               />
             </TableHeaderCell>
             <TableHeaderCell width='30%'>
-              <span onClick={() => handleSort('name')} style={{ cursor: 'pointer' }}>Name</span>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span onClick={() => handleSort('name')} style={{ cursor: 'pointer' }}>Name</span>
+                <span onClick={() => {
+                  toast.promise(translateMultiple(filteredSwitches.map(i => i.name)), {
+                    pending: 'Translating...',
+                    success: 'Translated!',
+                    error: 'Failed to translate'
+                  });
+                }} style={{ cursor: 'pointer', fontSize: '12px', background: '#333', padding: '2px 6px', borderRadius: '4px' }}>🌐 Translate All</span>
+              </div>
               <SearchInput
                 type="text"
                 placeholder="Search"

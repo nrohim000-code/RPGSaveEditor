@@ -15,6 +15,8 @@ import Tooltip from './Tooltip';
 import { useInView } from 'react-intersection-observer';
 import { ArmorData } from '../types/Armo';
 import TranslateText from './TranslateText';
+import { useTranslation } from '../context/TranslationContext';
+import { toast } from 'react-toastify';
 
 // Khai báo kiểu dữ liệu cho các mục
 interface Item {
@@ -28,6 +30,7 @@ interface Item {
 
 const ArmorsContent: React.FC = () => {
   const { content, setContent } = useContent();
+  const { translateMultiple } = useTranslation();
   const [searchId, setSearchId] = useState<string>('');
   const [searchName, setSearchName] = useState<string>('');
   const [searchQuantity, setSearchQuantity] = useState<string>('');
@@ -132,11 +135,16 @@ const ArmorsContent: React.FC = () => {
               />
             </TableHeaderCell>
             <TableHeaderCell width='30%' className="name-column">
-              <span
-                onClick={() => handleSort('name')} style={{ cursor: 'pointer' }}
-              >
-                Name
-              </span>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span onClick={() => handleSort('name')} style={{ cursor: 'pointer' }}>Name</span>
+                <span onClick={() => {
+                  toast.promise(translateMultiple(filteredArmors.map(i => i.name)), {
+                    pending: 'Translating...',
+                    success: 'Translated!',
+                    error: 'Failed to translate'
+                  });
+                }} style={{ cursor: 'pointer', fontSize: '12px', background: '#333', padding: '2px 6px', borderRadius: '4px' }}>🌐 Translate All</span>
+              </div>
               <SearchInput
                 type="text"
                 placeholder="Search"
