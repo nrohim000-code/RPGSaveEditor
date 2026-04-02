@@ -7,6 +7,7 @@ import darkTheme from './themes/dark';
 import lightTheme from './themes/light';
 import './App.css'
 import { ContentProvider } from './context/ContentContext';
+import { TranslationProvider } from './context/TranslationContext';
 import Hotkeys from './components/Hotkeys';
 import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
@@ -49,17 +50,19 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
       <ContentProvider>
-        <Hotkeys>
-          <AppContainer>
-            <Header toggleTheme={toggleTheme} isDarkMode={isDarkMode} />
-            <SidebarContainer>
-              <Sidebar selectedContent={selectedContent} onSelect={setSelectedContent} />
-            </SidebarContainer>
-            <MainContentContainer>
-              <Content page={selectedContent} />
-            </MainContentContainer>
-          </AppContainer>
-        </Hotkeys>
+        <TranslationProvider>
+          <Hotkeys>
+            <AppContainer>
+              <Header toggleTheme={toggleTheme} isDarkMode={isDarkMode} />
+              <SidebarContainer>
+                <Sidebar selectedContent={selectedContent} onSelect={setSelectedContent} />
+              </SidebarContainer>
+              <MainContentContainer>
+                <Content page={selectedContent} />
+              </MainContentContainer>
+            </AppContainer>
+          </Hotkeys>
+        </TranslationProvider>
       </ContentProvider>
       <ToastContainer />
     </ThemeProvider>

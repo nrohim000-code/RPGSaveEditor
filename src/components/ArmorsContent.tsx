@@ -14,6 +14,7 @@ import {
 import Tooltip from './Tooltip';
 import { useInView } from 'react-intersection-observer';
 import { ArmorData } from '../types/Armo';
+import TranslateText from './TranslateText';
 
 // Khai báo kiểu dữ liệu cho các mục
 interface Item {
@@ -191,7 +192,7 @@ const ArmorsContent: React.FC = () => {
                 <TableCell className="id-column">{item?.id}</TableCell>
                 <TableCell className="name-column">
                   <Tooltip text={item?.description} placement={index === items.length - 1 ? 'top' : 'right'}>
-                    {item?.name}
+                    <TranslateText text={item?.name} />
                   </Tooltip>
                 </TableCell>
                 <TableCell className="quantity-column">

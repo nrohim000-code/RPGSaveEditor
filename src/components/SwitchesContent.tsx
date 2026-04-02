@@ -12,6 +12,7 @@ import {
   SwitchInput, // Giả sử bạn đã định nghĩa một SwitchInput style
 } from '../styles/ItemsContentStyles';
 import { useInView } from 'react-intersection-observer';
+import TranslateText from './TranslateText';
 
 interface Switch {
   id: number;
@@ -170,7 +171,9 @@ const SwitchesContent: React.FC = () => {
           {filteredSwitches.slice(0, visibleItems).map((sw: any, index: number) => (
             <TableRow key={sw.id} ref={index === visibleItems - 1 ? ref : null}>
               <TableCell>{sw.id}</TableCell>
-              <TableCell>{sw.name}</TableCell>
+              <TableCell>
+                <TranslateText text={sw.name} />
+              </TableCell>
               <TableCell>
                 <SwitchInput
                   type="checkbox"

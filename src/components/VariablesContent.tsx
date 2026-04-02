@@ -13,6 +13,7 @@ import {
 } from '../styles/ItemsContentStyles';
 import { getDifferences } from '../utils/textUtils';
 import { useInView } from 'react-intersection-observer';
+import TranslateText from './TranslateText';
 
 // Khai báo kiểu dữ liệu cho các mục
 interface Item {
@@ -220,7 +221,9 @@ const VariablesContent: React.FC = () => {
             return (
               <TableRow key={item?.id} ref={index === visibleItems - 1 ? ref : null}>
                 <TableCell className="id-column">{item?.id}</TableCell>
-                <TableCell className="name-column">{item?.name}</TableCell>
+                <TableCell className="name-column">
+                  <TranslateText text={item?.name} />
+                </TableCell>
                 <TableCell className="quantity-column">
                   <QuantityInput
                     type="text"

@@ -16,6 +16,7 @@ import {
   GoldContainer,
   BonusLabel
 } from '../styles/PartyContentStyles';
+import TranslateText from './TranslateText';
 
 const PartyContent: React.FC = () => {
   const { content, setContent } = useContent();
@@ -97,8 +98,10 @@ const PartyContent: React.FC = () => {
       {characters.map((character: any, index: number) => (
         <CharacterContainer key={index}>
           <CharacterHeader onClick={() => handleCharacterClick(index)}>
-            {character._name || `Character ${index + 1}`}
-            {expandedCharacter === index ? '▲' : '▼'}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <TranslateText text={character._name || `Character ${index + 1}`} />
+              {expandedCharacter === index ? '▲' : '▼'}
+            </div>
           </CharacterHeader>
           {expandedCharacter === index && (
             <>
