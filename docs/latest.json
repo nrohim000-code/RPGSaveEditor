@@ -1,11 +1,11 @@
 {
-  "version": "1.2.4-translation",
-  "notes": "## What's Changed\n\n- chore: disable updater signature keys to allow unsigned build (@Cuplis-Kei-Darma)\n\n**Full Changelog**: https://github.com/nrohim000-code/RPGSaveEditor/compare/v1.2.3-translation...v1.2.4-translation",
-  "pub_date": "2026-04-02T00:50:38Z",
+  "version": "1.2.6-translation",
+  "notes": "## What's Changed\n\n- fix: correct variable names and ts types in translate all buttons (@Cuplis-Kei-Darma)\n\n**Full Changelog**: https://github.com/nrohim000-code/RPGSaveEditor/compare/v1.2.5-translation...v1.2.6-translation",
+  "pub_date": "2026-04-02T01:16:36Z",
   "platforms": {
     "windows-x86_64": {
       "signature": "",
-      "url": "https://github.com/nrohim000-code/RPGSaveEditor/releases/download/v1.2.4-translation/rpgsaveeditor_1.2.0_x64-setup.exe"
+      "url": "https://github.com/nrohim000-code/RPGSaveEditor/releases/download/v1.2.6-translation/rpgsaveeditor_1.2.0_x64-setup.exe"
     }
   }
 }
